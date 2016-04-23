@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>My App | Polytipe</title>
+  <title>project_name | Polytipe</title>
   <meta name="description" content="">
 
   <!-- No zooming! -->
@@ -37,20 +37,58 @@
 
 </head>
 
-<body unresolved class="fullbleed">
+<body unresolved class="fullbleed main">
   <paper-drawer-panel id="drawer_panel" disable-swipe force-narrow>
     <paper-header-panel drawer mode="seamed">
       <div id="drawer_content"></div>
     </paper-header-panel>
     <paper-header-panel main mode="seamed">
-      <iron-pages id="app_content" attr-for-selected="id"></iron-pages>
+      <paper-toolbar id="editor_toolbar" class="screen_view_toolbar">
+        <paper-icon-button class="back_icon" icon="polytipe-icons:icon"></paper-icon-button>
+        <template is="dom-if" if="{{!preview_mode}}">
+          <div class="paper-font-title">Prototipo project_name</div>
+          <span class="flex"></span>
+          <paper-menu-button horizontal-align="right" vertical-offset="15" horizontal-offset="5">
+            <paper-icon-button icon="more-vert" class="dropdown-trigger" title="Más acciones"></paper-icon-button>
+            <paper-menu class="dropdown-content">
+              <a class="link" tabindex="-1" href="https://github.com/username/polytipe-projects/tree/project_name" target="_blank">
+                <paper-item>
+                  <iron-icon class="element_icon" icon="code"></iron-icon>
+                  <div>Ir al código</div>
+                </paper-item>
+              </a>
+              <paper-item>
+                <iron-icon class="element_icon" icon="feedback"></iron-icon>
+                <div>Enviar feedback</div>
+              </paper-item>
+              <a class="link" tabindex="-1" href="https://polytipe.me" target="_blank">
+                <paper-item>
+                  <iron-icon class="element_icon delete_icon" icon="polytipe-icons:icon"></iron-icon>
+                  <div>Ir a Polytipe</div>
+                </paper-item>
+              </a>
+            </paper-menu>
+          </paper-menu-button>
+        </template>
+      </paper-toolbar>
+
+      <div id="app_container" class="layout horizontal center-center">
+        <paper-spinner id="iframe_loading_spinner" active></paper-spinner>
+        <iframe id="app_iframe" src="prototype.html"></iframe>
+        <paper-chip id="user_badge" animated>
+          <iron-image class="icon" id="avatar" src="avatar_url"></iron-image>
+          <h1>username</h1>
+          <h2>Creado con <strong><a class="link" href="https://polytipe.me" target="_blank">Polytipe</a></strong></h2>
+        </paper-chip>
+      </div>
     </paper-header-panel>
   </paper-drawer-panel>
 
   <script type="text/javascript">
-    window.addEventListener('WebComponentsReady', function(e) {
-      parent.iframe_ready();
-    });
+    function iframe_ready() {
+      document.getElementById('app_iframe').style.opacity = 1;
+      document.getElementById('iframe_loading_spinner').active = false;
+    }
   </script>
 </body>
 
