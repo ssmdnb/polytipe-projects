@@ -38,20 +38,21 @@
 </head>
 
 <body unresolved class="fullbleed main">
-  <paper-drawer-panel id="drawer_panel" disable-swipe force-narrow>
-    <paper-header-panel drawer mode="seamed">
-      <div id="drawer_content"></div>
-    </paper-header-panel>
-    <paper-header-panel main mode="seamed">
-      <paper-toolbar id="editor_toolbar" class="screen_view_toolbar">
-        <paper-icon-button class="back_icon" icon="polytipe-icons:icon"></paper-icon-button>
-        <template is="dom-if" if="{{!preview_mode}}">
+  <template id="app" is="dom-bind">
+    <iron-location path="{{path}}" hash="{{hash}}" query="{{query}}"></iron-location>
+    <paper-drawer-panel id="drawer_panel" disable-swipe force-narrow>
+      <paper-header-panel drawer mode="seamed">
+        <div id="drawer_content"></div>
+      </paper-header-panel>
+      <paper-header-panel main mode="seamed">
+        <paper-toolbar id="editor_toolbar" class="screen_view_toolbar">
+          <paper-icon-button class="back_icon" icon="polytipe-icons:icon"></paper-icon-button>
           <div class="paper-font-title">Prototipo project_name</div>
           <span class="flex"></span>
           <paper-menu-button horizontal-align="right" vertical-offset="15" horizontal-offset="5">
             <paper-icon-button icon="more-vert" class="dropdown-trigger" title="Más acciones"></paper-icon-button>
             <paper-menu class="dropdown-content">
-              <a class="link" tabindex="-1" href="https://github.com/username/polytipe-projects/tree/project_name" target="_blank">
+              <a class="link" tabindex="-1" href="https://github.com/{{username}}/polytipe-projects/tree/project_name" target="_blank">
                 <paper-item>
                   <iron-icon class="element_icon" icon="code"></iron-icon>
                   <div>Ir al código</div>
@@ -69,25 +70,45 @@
               </a>
             </paper-menu>
           </paper-menu-button>
-        </template>
-      </paper-toolbar>
+        </paper-toolbar>
 
-      <div id="app_container" class="layout horizontal center-center">
-        <paper-spinner id="iframe_loading_spinner" active></paper-spinner>
-        <iframe id="app_iframe" src="prototype.html"></iframe>
-        <paper-chip id="user_badge" animated>
-          <iron-image class="icon" id="avatar" src="avatar_url"></iron-image>
-          <h1>username</h1>
-          <h2>Creado con <strong><a class="link" href="https://polytipe.me" target="_blank">Polytipe</a></strong></h2>
-        </paper-chip>
-      </div>
-    </paper-header-panel>
-  </paper-drawer-panel>
+        <div id="app_container" class="layout horizontal center-center">
+          <paper-spinner id="iframe_loading_spinner" active></paper-spinner>
+          <iframe id="app_iframe" src="prototype.html"></iframe>
+          <paper-chip id="user_badge" animated>
+            <iron-image class="icon" id="avatar" src="{{avatar_url}}" preload fade></iron-image>
+            <h1>{{username}}</h1>
+            <h2>Creado con <strong><a class="link" href="https://polytipe.me" target="_blank">Polytipe</a></strong></h2>
+          </paper-chip>
+        </div>
+      </paper-header-panel>
+    </paper-drawer-panel>
 
+    <iron-ajax
+        auto
+        url="https://api.github.com/users/{{username}}"
+        last-response="{{last_response}}">
+    </iron-ajax>
+  </template>
   <script type="text/javascript">
+    window.addEventListener('WebComponentsReady', function(e) {
+      var app = document.getElementById("app");
+      app.username = location.host.split(".")[0];
+
+      document.querySelector('iron-ajax').addEventListener("response", function () {
+        app.avatar_url = app.last_response.avatar_url;
+      });
+
+    });
     function iframe_ready() {
       document.getElementById('app_iframe').style.opacity = 1;
       document.getElementById('iframe_loading_spinner').active = false;
+
+      var iframe_document = document.getElementById('app_iframe').contentDocument || document.getElementById('app_iframe').contentWindow.document;
+      var app_content = iframe_document.getElementById('app_content');
+      if(app_content.children.length > 0){
+        app_content.selected = app_content.children[0].id;
+      }
     }
   </script>
 </body>
