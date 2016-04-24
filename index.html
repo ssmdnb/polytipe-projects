@@ -61,35 +61,34 @@
       </paper-header-panel>
       <paper-header-panel main mode="seamed">
         <paper-toolbar id="editor_toolbar" class="screen_view_toolbar">
-          <paper-icon-button class="back_icon" icon="polytipe-icons:icon"></paper-icon-button>
+          <a class="link" tabindex="-1" href="https://polytipe.me" target="_blank">
+            <paper-icon-button class="back_icon" icon="polytipe-icons:icon"></paper-icon-button>
+          </a>
           <div class="paper-font-title">Prototipo project_name</div>
           <span class="flex"></span>
-          <paper-menu-button horizontal-align="right" vertical-offset="15" horizontal-offset="5">
-            <paper-icon-button icon="more-vert" class="dropdown-trigger" title="Más acciones"></paper-icon-button>
-            <paper-menu class="dropdown-content">
-              <a class="link" tabindex="-1" href="https://github.com/{{username}}/polytipe-projects/tree/project_name" target="_blank">
-                <paper-item>
-                  <iron-icon class="element_icon" icon="code"></iron-icon>
-                  <div>Ir al código</div>
-                </paper-item>
-              </a>
-              <paper-item>
-                <iron-icon class="element_icon" icon="feedback"></iron-icon>
-                <div>Enviar feedback</div>
-              </paper-item>
-              <a class="link" tabindex="-1" href="https://polytipe.me" target="_blank">
-                <paper-item>
-                  <iron-icon class="element_icon delete_icon" icon="polytipe-icons:icon"></iron-icon>
-                  <div>Ir a Polytipe</div>
-                </paper-item>
-              </a>
-            </paper-menu>
-          </paper-menu-button>
+          <a class="link" tabindex="-1" href="https://github.com/{{username}}/polytipe-projects/tree/project_name" target="_blank">
+            <paper-icon-button icon="polytipe-icons:github"></paper-icon-button>
+          </a>
+          <a class="link" tabindex="-1" href="https://github.com/{{username}}/polytipe-projects/issues" target="_blank">
+            <paper-icon-button icon="feedback"></paper-icon-button>
+          </a>
         </paper-toolbar>
 
-        <div id="app_container" class="layout horizontal center-center">
-          <paper-spinner id="iframe_loading_spinner" active></paper-spinner>
-          <iframe id="app_iframe" src="prototype.html"></iframe>
+        <div id="app_container" class="layout vertical center-center">
+          <div id="test">
+            <div id="tiny_toolbar" class="paper-font-caption layout horizontal center">
+              <iron-icon class="status_icon" icon="polytipe-icons:icon"></iron-icon>
+              <span class="flex"></span>
+              <iron-icon class="status_icon" icon="device:bluetooth"></iron-icon>
+              <iron-icon class="status_icon" icon="device:signal-wifi-3-bar"></iron-icon>
+              <iron-icon class="status_icon" icon="device:signal-cellular-4-bar"></iron-icon>
+              <battery-status-icon autodetect class="status_icon"></battery-status-icon>
+              <div id="clock" class="paper-font-caption">12:00</div>
+            </div>
+            <paper-spinner id="iframe_loading_spinner" active></paper-spinner>
+            <iframe id="app_iframe" src="prototype.html"></iframe>
+          </div>
+
           <paper-chip id="user_badge" animated>
             <iron-image class="icon" id="avatar" src="{{avatar_url}}" preload fade></iron-image>
             <h1>{{username}}</h1>
@@ -114,6 +113,7 @@
         app.avatar_url = app.last_response.avatar_url;
       });
 
+      startTime();
     });
     function iframe_ready() {
       document.getElementById('app_iframe').style.opacity = 1;
@@ -124,6 +124,20 @@
       if(app_content.children.length > 0){
         app_content.selected = app_content.children[0].id;
       }
+    }
+    function startTime() {
+      var today = new Date();
+      var h = today.getHours();
+      var m = today.getMinutes();
+      var s = today.getSeconds();
+      m = checkTime(m);
+      s = checkTime(s);
+      document.getElementById('clock').innerHTML = h + ":" + m;
+      var t = setTimeout(startTime, 1000);
+    }
+    function checkTime(i) {
+      if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+      return i;
     }
   </script>
 </body>
