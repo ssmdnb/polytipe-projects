@@ -78,30 +78,18 @@
           <paper-spinner id="iframe_loading_spinner" active></paper-spinner>
           <iframe id="app_iframe" src="prototype.html"></iframe>
           <paper-chip id="user_badge" animated>
-            <iron-image class="icon" id="avatar" src="{{avatar_url}}" preload fade></iron-image>
+            <iron-image class="icon" id="avatar" src="avatar_url" preload fade></iron-image>
             <h1>{{username}}</h1>
             <h2>Creado con <strong><a class="link" href="https://polytipe.me" target="_blank">Polytipe</a></strong></h2>
           </paper-chip>
         </div>
       </paper-header-panel>
     </paper-drawer-panel>
-
-    <iron-ajax
-        auto
-        url="https://api.github.com/users/{{username}}"
-        last-response="{{last_response}}">
-    </iron-ajax>
   </template>
   <script type="text/javascript">
     window.addEventListener('WebComponentsReady', function(e) {
       var app = document.getElementById("app");
       app.username = location.host.split(".")[0];
-
-      document.querySelector('iron-ajax').addEventListener("response", function () {
-        app.avatar_url = app.last_response.avatar_url;
-      });
-
-      startTime();
     });
     function iframe_ready() {
       document.getElementById('app_iframe').style.opacity = 1;
