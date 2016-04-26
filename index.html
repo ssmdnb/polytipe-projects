@@ -111,7 +111,6 @@
     document.body.appendChild(pre_loader);
 
     window.addEventListener('WebComponentsReady', function(e) {
-      document.getElementById('drawer_panel').style.opacity = 1;
       pre_loader.style.display = "none";
       var app = document.getElementById("app");
       app.username = location.host.split(".")[0];
