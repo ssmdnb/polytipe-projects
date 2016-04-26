@@ -29,6 +29,11 @@
     background-color: var(--polytipe-bg-color);
   }
 
+  #drawer_panel{
+    transition: opacity ease-in 0.2s;
+    opacity: 0;
+  }
+
   /*Default typography styles*/
   .paper-font-display4 {@apply(--paper-font-display4);}
   .paper-font-display3 {@apply(--paper-font-display3);}
@@ -92,6 +97,13 @@
   .link{
     color: inherit;
     text-decoration: none;
+  }
+
+  paper-tooltip{
+    text-align:center;
+    --paper-tooltip:{
+      font-size: 12px;
+    }
   }
 
   /* User badge */
