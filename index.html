@@ -47,6 +47,9 @@
 
   <!-- Web Components -->
   <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="github.js"></script>
+  <script src="github.bundle.min.js"></script>
+
   <link rel="import" href="elements.html">
   <link rel="import" href="styles.html">
   <link rel="import" href="iron-flex.html">
@@ -77,9 +80,7 @@
             <paper-tooltip offset="0" animation-delay="0">Ver en Github</paper-tooltip>
           </div>
           <div>
-            <a class="link" tabindex="-1" href="https://github.com/{{username}}/polytipe-projects/issues" target="_blank">
-              <paper-icon-button icon="feedback"></paper-icon-button>
-            </a>
+            <paper-icon-button icon="feedback" onclick="promptIssueDialog()"></paper-icon-button>
             <paper-tooltip offset="0" animation-delay="0">Enviar feedback</paper-tooltip>
           </div>
         </paper-toolbar>
@@ -95,37 +96,54 @@
         </div>
       </paper-header-panel>
     </paper-drawer-panel>
+
+    <firebase-auth
+      id="firebaseAuth"
+      location="https://polytipe.firebaseio.com"
+      provider="{{provider}}"
+      redirect
+      user="{{signed_user}}"
+      params='{"scope": "public_repo"}'>
+    </firebase-auth>
+
+    <paper-dialog id="sign_in_dialog" class="modal_dialog" modal entry-animation="slide-from-bottom-animation" exit-animation="fade-out-animation">
+      <div class="layout horizontal">
+        <h2 class="flex">Iniciar sesión</h2>
+        <paper-spinner id="sign_in_spinner"></paper-spinner>
+      </div>
+      <div class="create_repo_description paper-font-subhead">
+        Al iniciar sesión aceptas a que recopilemos información acerca
+        de tu visita y de cómo interactúas con el prototipo. Puedes
+        entrar con tu cuenta de Github o como invitado.</div>
+      <div class="buttons layout vertical end">
+        <paper-button class="accept_button" onclick="sign_in('github')" noink autofocus>Iniciar con Github</paper-button>
+        <paper-button class="cancel_button" onclick="sign_in('anonymous')" noink>Iniciar como invitado</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-dialog id="add_issue_dialog" class="modal_dialog" with-backdrop entry-animation="slide-from-bottom-animation" exit-animation="fade-out-animation">
+      <div class="layout horizontal">
+        <h2 class="flex">Enviar feedback</h2>
+        <paper-spinner id="add_issue_spinner"></paper-spinner>
+      </div>
+      <paper-input id="add_issue_input" label="Título" value="{{issue_title}}" autofocus required error-message="No puede dejarse en blanco"></paper-input>
+      <paper-textarea max-rows="3" type="text" id="add_issue_body_input" label="Mensaje" value="{{issue_body}}" autofocus required error-message="No puede dejarse en blanco"></paper-textarea>
+      <div class="buttons">
+        <paper-button class="cancel_button" noink dialog-dismiss>Cancelar</paper-button>
+        <paper-button class="accept_button" onclick="createIssue()" noink autofocus>Enviar</paper-button>
+      </div>
+    </paper-dialog>
+
+    <paper-toast id="sign_in_success_toast" duration="3500" text="Se ha iniciado sesión correctamente"></paper-toast>
+    <paper-toast id="sign_in_fail_toast" duration="5000" text="Ocurrió un error al iniciar sesión">
+      <paper-button noink onclick="sign_in()">Reintentar</paper-button>
+    </paper-toast>
+    <paper-toast id="issue_success_toast" duration="3500" text="Gracias por enviar tus comentarios"></paper-toast>
+    <paper-toast id="issue_fail_toast" duration="3500" text="Los comentarios están deshabilitados"></paper-toast>
+
   </template>
-  <script type="text/javascript">
-    //Preloader
-    var style = document.createElement("style");
-    style.textContent = "" + "body {" + "background-color: #303030; margin: 0 auto; width: 100vw; height: 100vh;" + " } \n" + "#pre_loader{" + "margin: 0 auto; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; transition: opacity ease-in 0.2s;" + " }";
-    var head = document.querySelector("head");
-    head.insertBefore(style, head.firstChild);
 
-    var pre_loader = document.createElement("div");
-    pre_loader.id = "pre_loader";
-    var loading_icon = document.createElement("div");
-    loading_icon.innerHTML = "<img src='images/touch/preloader.png'>";
-    pre_loader.appendChild(loading_icon);
-    document.body.appendChild(pre_loader);
-
-    window.addEventListener('WebComponentsReady', function(e) {
-      pre_loader.style.display = "none";
-      var app = document.getElementById("app");
-      app.username = location.host.split(".")[0];
-    });
-    function iframe_ready() {
-      document.getElementById('app_iframe').style.opacity = 1;
-      document.getElementById('iframe_loading_spinner').active = false;
-
-      var iframe_document = document.getElementById('app_iframe').contentDocument || document.getElementById('app_iframe').contentWindow.document;
-      var app_content = iframe_document.getElementById('app_content');
-      if(app_content.children.length > 0){
-        app_content.selected = app_content.children[0].id;
-      }
-    }
-  </script>
+  <script src="app.js"></script>
 </body>
 
 </html>
