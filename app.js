@@ -17,6 +17,7 @@ window.addEventListener('WebComponentsReady', function(e) {
   pre_loader.style.display = "none";
   var app = document.getElementById("app");
   app.username = location.host.split(".")[0];
+  app.project = document.title.split(" | ")[0];
 
   firebase_element = document.getElementById('firebaseAuth');
   firebase_element.addEventListener('login', function (e) {
@@ -88,7 +89,10 @@ function createIssue() {
     var issues = github.getIssues(app.username, "polytipe-projects");
     var options = {
       title: app.issue_title,
-      body: app.issue_body
+      body: app.issue_body,
+      labels: [
+        app.project
+      ]
     };
 
     issues.create(options, function(err, issue) {
