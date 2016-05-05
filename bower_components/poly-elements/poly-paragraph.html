@@ -1,13 +1,14 @@
 <link rel="import" href="../polymer/polymer.html">
 
-<dom-module id="poly-label">
+<dom-module id="poly-paragraph">
 
   <style>
     :host {
       display: inline-block;
       cursor: pointer;
     }
-    #label{
+
+    #paragraph{
       display: inline-block;
       -webkit-user-select: none !important;
       -moz-user-select: none !important;
@@ -30,23 +31,23 @@
   </style>
 
   <template>
-    <div id="label">{{text}}</div>
+    <div id="paragraph">{{text}}</div>
   </template>
   <script>
     Polymer({
-      is: 'poly-label',
+      is: 'poly-paragraph',
       listeners: {
         'tap': 'focus'
       },
       properties:{
         text:{
           type: String,
-          value: "Texto",
-          reflectToAttribute: true
+          reflectToAttribute: true,
+          value: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere voluptas illo inventore debitis et sit molestiae pariatur doloremque dicta."
         },
         size:{
           type: String,
-          value: "paper-font-subhead",
+          value: "paper-font-body1",
           reflectToAttribute: true,
           observer: "_sizeChanged"
         },
@@ -73,22 +74,22 @@
         this.toggleClass('flex', this.flex);
       },
       _sizeChanged: function() {
-        this.$.label.className = this.size;
+        this.$.paragraph.className = this.size;
       },
 
       getStyles: function(){
-        this.width = getComputedStyle(this.$.label)["width"];
-        this.height = getComputedStyle(this.$.label)["height"];
-        this['background-color'] = this.rgb2hex(getComputedStyle(this)["background-color"]);
-        this.color = this.rgb2hex(getComputedStyle(this)["color"]);
-        this.display = getComputedStyle(this.$.label)["display"];
+        this.width = getComputedStyle(this.$.paragraph)["width"];
+        this.height = getComputedStyle(this.$.paragraph)["height"];
+        this['background-color'] = this.rgb2hex(getComputedStyle(this.$.paragraph)["background-color"]);
+        this.color = this.rgb2hex(getComputedStyle(this.$.paragraph)["color"]);
+        this.display = getComputedStyle(this.$.paragraph)["display"];
 
         var values = ["-top","-right","-bottom","-left"];
         var margin = [];
         var padding = [];
         for (var j = 0; j < values.length; j++) {
-          margin.push(getComputedStyle(this.$.label)["margin"+values[j]]);
-          padding.push(getComputedStyle(this.$.label)["padding"+values[j]]);
+          margin.push(getComputedStyle(this.$.paragraph)["margin"+values[j]]);
+          padding.push(getComputedStyle(this.$.paragraph)["padding"+values[j]]);
         }
         this.margin = margin.join(' ');
         this.padding = padding.join(' ');
@@ -102,7 +103,7 @@
       },
       refreshStyles: function (property, value) {
         this.style[property] = value;
-        this.$.label.setAttribute('style', this.getAttribute('style'));
+        this.$.paragraph.setAttribute('style', this.getAttribute('style'));
       }
     });
   </script>

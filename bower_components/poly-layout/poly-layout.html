@@ -1,13 +1,12 @@
 <link rel="import" href="../polymer/polymer.html">
-
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 
 <dom-module id="poly-layout">
 
   <style>
     :host {
-      display: inline-block;
-      width: 100%;
+      display: block;
+      width: auto;
       min-height: 45px;
       box-sizing: border-box;
       border: 1px solid #aaa;
@@ -15,6 +14,7 @@
   </style>
 
   <template>
+    <content></content>
   </template>
 
   <script>
@@ -26,27 +26,33 @@
       properties:{
         layout:{
           type: String,
-          observer: "_layoutChanged"
+          observer: "_layoutChanged",
+          reflectToAttribute: true
         },
         align:{
           type: String,
-          observer: "_alignChanged"
+          observer: "_alignChanged",
+          reflectToAttribute: true
         },
         justify:{
           type: String,
-          observer: "_justifyChanged"
+          observer: "_justifyChanged",
+          reflectToAttribute: true
         },
         flex:{
           type: String,
-          observer: "_flexChanged"
+          observer: "_flexChanged",
+          reflectToAttribute: true
         },
         wrap:{
           type: Boolean,
-          value: false
+          value: false,
+          reflectToAttribute: true
         },
         reverse:{
           type: Boolean,
-          value: false
+          value: false,
+          reflectToAttribute: true
         }
       },
       ready: function () {
@@ -57,34 +63,59 @@
         this.justifyDropdown = ["", "start-justified","center-justified","end-justified","justified","around-justified"];
         this.flexDropdown = ["", "flex-1","flex-2","flex-3","flex-4","flex-5","flex-6","flex-7","flex-8","flex-9","flex-10","flex-11","flex-12"];
         this.toggleClass("layout", true);
+        this.computeStructure();
       },
       focus: function(event) {
         this.getStyles();
-        if(!this.focused){
-          this.fire("elementSelection");
-          this.toggleClass('outlined_element', true);
-        }
+        this.fire("elementSelection");
+        this.toggleClass('outlined_element', true);
         event.stopPropagation();
-        this._focused = true;
       },
       unfocus: function() {
         this.toggleClass('outlined_element', false);
-        this._focused = false;
       },
-      _layoutChanged: function () {this.selector = this.layoutDropdown; this._pChanged(this.layout)},
-      _alignChanged: function () {this.selector = this.alignDropdown; this._pChanged(this.align)},
-      _justifyChanged: function () {this.selector = this.justifyDropdown; this._pChanged(this.justify)},
-      _flexChanged: function () {this.selector = this.flexDropdown; this._pChanged(this.flex)},
+      _layoutChanged: function () {
+        this.selector = this.layoutDropdown;
+        this._pChanged(this.layout);
+       },
+      _alignChanged: function () {
+        this.selector = this.alignDropdown;
+        this._pChanged(this.align);
+       },
+      _justifyChanged: function () {
+        this.selector = this.justifyDropdown;
+        this._pChanged(this.justify);
+       },
+      _flexChanged: function () {
+        this.selector = this.flexDropdown;
+        this._pChanged(this.flex);
+       },
 
       _pChanged: function (p) {
-        for (var i = 0; i < this.selector.length; i++) {
-          if(this.selector[i] != ""){
-            if(this.selector[i] == p){
-              this.toggleClass(this.selector[i], true);
-            }else{
-              this.toggleClass(this.selector[i], false);
+        if(this.selector != undefined){
+          for (var i = 0; i < this.selector.length; i++) {
+            if(this.selector[i] != ""){
+              if(this.selector[i] == p){
+                this.toggleClass(this.selector[i], true);
+              }else{
+                this.toggleClass(this.selector[i], false);
+              }
             }
           }
+        }
+      },
+      computeStructure: function(){
+        if(this.layout){
+          this.toggleClass(this.layout, true);
+        }
+        if(this.align){
+          this.toggleClass(this.align, true);
+        }
+        if(this.justify){
+          this.toggleClass(this.justify, true);
+        }
+        if(this.flex){
+          this.toggleClass(this.flex, true);
         }
       },
       getStyles: function(){
@@ -111,7 +142,7 @@
         ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
         ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
       },
-      updateStyles: function (property, value) {
+      refreshStyles: function (property, value) {
         this.style[property] = value;
       }
     });
