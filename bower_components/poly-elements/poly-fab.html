@@ -47,7 +47,7 @@
         },
         bottom_right:{
           type: Boolean,
-          value: false,
+          value: true,
           observer: "_bottom_right_Changed",
           reflectToAttribute: true
         },
@@ -56,12 +56,22 @@
           value: false,
           reflectToAttribute: true,
           observer: "_flexChanged"
+        },
+        link:{
+          type: String,
+          value: "",
+          reflectToAttribute: true
         }
       },
       ready: function () {
         this.refreshStyles();
       },
       focus: function(event) {
+        if(this.preview_mode){
+          if(this.link){
+            this._goto();
+          }
+        }
         this.getStyles();
         this.fire("elementSelection");
         this.toggleClass('outlined_element', true);
@@ -82,6 +92,9 @@
           this.toggleClass("bottom", false);
         }
       },
+      _goto: function(){
+        document.querySelector("iron-pages").selected = this.link;
+      },
 
 
       getStyles: function(){
@@ -89,7 +102,7 @@
         this.height = getComputedStyle(this.$.fab)["height"];
         this['background-color'] = this.rgb2hex(getComputedStyle(this.$.fab)["background-color"]);
         this.color = this.rgb2hex(getComputedStyle(this.$.fab)["color"]);
-        this.display = getComputedStyle(this.$.fab)["display"];
+        this.display = getComputedStyle(this)["display"];
 
         var values = ["-top","-right","-bottom","-left"];
         var margin = [];
