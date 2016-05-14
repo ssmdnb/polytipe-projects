@@ -81,7 +81,7 @@ function promptIssueDialog() {
 function createIssue() {
   var title_validated = document.getElementById("add_issue_input").validate();
   var body_validated = document.getElementById("add_issue_body_input").validate();
-  if(!title_validated && !body_validated){
+  if(!title_validated || !body_validated){
     return;
   }
   document.getElementById("add_issue_spinner").active = true;
